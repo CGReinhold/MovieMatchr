@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1020072602516",
+    "project_id": "movie-matchr-eada4",
+    "storage_bucket": "movie-matchr-eada4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020072602516:android:283cc45540fdd80d82fd81",
+        "android_client_info": {
+          "package_name": "com.moviematchr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1020072602516-hmoh7h9r5vtktrgib74rdgulfkj2b22f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1UzcRCnjEpd8qlCtQW3QRc2eAD3DsPgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1020072602516-hmoh7h9r5vtktrgib74rdgulfkj2b22f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
