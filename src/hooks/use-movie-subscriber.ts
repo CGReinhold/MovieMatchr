@@ -1,10 +1,60 @@
-import firestore from '@react-native-firebase/firestore';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
 import { useEffect } from 'react';
 import { store } from '../state';
+import { ActionType } from '../state/action-types';
+import { useActions } from './use-actions';
 
 export const useMovieSubscriber = () => {
-  const onMovieFound = (movie: Movie) => {
-    console.log('movie match', movie);
+  const { setMovieToPartners } = useActions();
+
+  const onSnapshot = async (
+    data: FirebaseFirestoreTypes.QuerySnapshot<FirebaseFirestoreTypes.DocumentData>,
+  ): Promise<void> => {
+    const changes = data.docChanges();
+
+    const { partners, likedMovies } = store.getState().user;
+    changes.forEach(async (change) => {
+      const likedMovie = likedMovies.find(
+        (movie) => movie.imdbID === change.doc.id,
+      );
+
+      if (likedMovie) {
+        const peopleThatLiked = change.doc.data();
+        if (peopleThatLiked) {
+          const idsPeopleThatLiked = Object.keys(peopleThatLiked);
+          const friendsThatLiked = partners.filter((partner) =>
+            idsPeopleThatLiked.includes(partner.ID),
+          );
+
+          let showMatchPopup = false;
+
+          await setMovieToPartners(
+            partners,
+            friendsThatLiked.map((f) => f.ID),
+            likedMovie,
+          );
+
+          friendsThatLiked.forEach((friend) => {
+            if (!friend.movieIDs.includes(likedMovie.imdbID)) {
+              store.dispatch({
+                type: ActionType.ADD_MOVIE_TO_PARTNER,
+                payload: { movie: likedMovie, partner: friend.ID },
+              });
+
+              if (!showMatchPopup) {
+                showMatchPopup = true;
+                store.dispatch({
+                  type: ActionType.ADD_MATCH_MOVIE,
+                  payload: { movie: likedMovie, partner: friend.ID },
+                });
+              }
+            }
+          });
+        }
+      }
+    });
   };
 
   useEffect(() => {
@@ -12,30 +62,7 @@ export const useMovieSubscriber = () => {
 
     const subscriber = firestore()
       .collection(userID)
-      .onSnapshot(
-        (data) => {
-          const changes = data.docChanges();
-
-          const { partners, likedMovies } = store.getState().user;
-          changes.forEach((change) => {
-            console.log('change DATA', change.doc.data());
-            console.log('change ID', change.doc.id);
-
-            const likedMovie = likedMovies.find(
-              (movie) => movie.imdbID === change.doc.id,
-            );
-
-            if (likedMovie) {
-              const movieData = change.doc.data();
-              if (movieData) {
-                // TODO: descobrir alguma forma de disparar para cima que teve um mach no filme
-                // TODO: salvar na lista de filmes de parceiros
-              }
-            }
-          });
-        },
-        (e) => console.error(e),
-      );
+      .onSnapshot(onSnapshot, (e) => console.error(e));
 
     return () => subscriber();
   }, []);

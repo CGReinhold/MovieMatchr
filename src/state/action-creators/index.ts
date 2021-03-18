@@ -39,6 +39,27 @@ const getPartners = async (): Promise<Partner[]> => {
   return JSON.parse(partners);
 };
 
+const setMovieToPartners = async (
+  partners: Partner[],
+  partnersToUpdate: string[],
+  movie: Movie,
+): Promise<void> => {
+  const updatedPartners = partners.map((partner) => {
+    if (
+      partnersToUpdate.includes(partner.ID) &&
+      !partner.movieIDs.includes(movie.imdbID)
+    ) {
+      return {
+        ...partner,
+        movieIDs: [...partner.movieIDs, movie.imdbID],
+      };
+    }
+    return partner;
+  });
+
+  await AsyncStorage.setItem(USER_PARTNERS, JSON.stringify(updatedPartners));
+};
+
 const loadUser = () => {
   return async (dispatch: Dispatch<Action>) => {
     const userID = await getUserID();
@@ -155,17 +176,7 @@ const likeMovie = (movie: Movie) => {
         });
       });
 
-      const updatedPartners = partners.map((partner) => {
-        if (matches.includes(partner.ID)) {
-          return { ...partner, movieIDs: [...partner.movieIDs, movie.imdbID] };
-        }
-        return partner;
-      });
-
-      await AsyncStorage.setItem(
-        USER_PARTNERS,
-        JSON.stringify(updatedPartners),
-      );
+      await setMovieToPartners(partners, matches, movie);
     }
   };
 };
@@ -179,4 +190,5 @@ export const actionCreators = {
   addUserToSync,
   likeMovie,
   keepPlaying,
+  setMovieToPartners,
 };
