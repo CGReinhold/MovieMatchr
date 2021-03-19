@@ -28,9 +28,9 @@ const MovieList: React.FC<MovieListProps> = ({ movies }) => {
         <View style={styles.movieItemContainer}>
           <Image source={{ uri: item.Poster }} style={styles.moviePoster} />
           <View>
-            <Text style={styles.movieTitle}>{item.title}</Text>
+            <Text style={styles.movieTitle}>{item.Title}</Text>
             <Text style={styles.movieDescription}>
-              {item.Country} - {item.year}
+              {item.Country} - {item.Year}
             </Text>
           </View>
         </View>

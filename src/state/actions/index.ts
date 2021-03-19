@@ -8,6 +8,7 @@ export interface LoadUserAction {
     userID: string;
     partners: Partner[];
     likedMovies: Movie[];
+    dislikedMovies: string[];
   };
 }
 
@@ -19,6 +20,11 @@ export interface AddUserToSyncAction {
 export interface LikeMovieAction {
   type: ActionType.LIKE_MOVIE;
   payload: Movie;
+}
+
+export interface DislikeMovieAction {
+  type: ActionType.DISLIKE_MOVIE;
+  payload: string;
 }
 
 export interface AddMatchMovie {
@@ -45,6 +51,7 @@ export type Action =
   | LoadUserAction
   | AddUserToSyncAction
   | LikeMovieAction
+  | DislikeMovieAction
   | AddMatchMovie
   | RemoveMatchMovie
   | AddMovieToPartner;

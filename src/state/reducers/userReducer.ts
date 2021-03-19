@@ -7,6 +7,7 @@ export interface UserState {
   userID: string;
   partners: Partner[];
   likedMovies: Movie[];
+  dislikedMovies: string[];
   matchedMovie: {
     movie: Movie;
     partner: string;
@@ -17,6 +18,7 @@ const initialState: UserState = {
   userID: '',
   partners: [],
   likedMovies: [],
+  dislikedMovies: [],
   matchedMovie: null,
 };
 
@@ -34,6 +36,8 @@ const reducer = (
       };
     case ActionType.LIKE_MOVIE:
       return { ...state, likedMovies: [...state.likedMovies, action.payload] };
+    case ActionType.DISLIKE_MOVIE:
+      return { ...state, dislikedMovies: [...state.dislikedMovies, action.payload] };
     case ActionType.ADD_MATCH_MOVIE:
       return { ...state, matchedMovie: action.payload };
     case ActionType.REMOVE_MATCH_MOVIE:

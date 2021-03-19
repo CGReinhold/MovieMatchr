@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Actions } from 'react-native-router-flux';
 import { Dispatch } from 'redux';
 import firestore from '@react-native-firebase/firestore';
-import { USER_ID, USER_MOVIES, USER_PARTNERS } from '../../constants/User';
+import { USER_DISLIKED_MOVIES, USER_ID, USER_MOVIES, USER_PARTNERS } from '../../constants/User';
 import { randomString } from '../../utils/RandomUtils';
 import { ActionType } from '../action-types';
 import { Action } from '../actions';
@@ -28,6 +28,15 @@ const getLikedMovies = async (): Promise<Movie[]> => {
   }
 
   return JSON.parse(likedMovies);
+};
+
+const getDislikedMovies = async (): Promise<string[]> => {
+  const dislikedMovies = await AsyncStorage.getItem(USER_DISLIKED_MOVIES);
+  if (!dislikedMovies) {
+    return [];
+  }
+
+  return JSON.parse(dislikedMovies);
 };
 
 const getPartners = async (): Promise<Partner[]> => {
@@ -65,9 +74,10 @@ const loadUser = () => {
     const userID = await getUserID();
     const likedMovies = await getLikedMovies();
     const partners = await getPartners();
+    const dislikedMovies = await getDislikedMovies();
     dispatch({
       type: ActionType.LOAD_USER,
-      payload: { userID, likedMovies, partners },
+      payload: { userID, likedMovies, partners, dislikedMovies },
     });
     Actions.movieSwiper();
   };
@@ -181,6 +191,22 @@ const likeMovie = (movie: Movie) => {
   };
 };
 
+const dislikeMovie = (movie: Movie) => {
+  return async (
+    dispatch: Dispatch<Action>,
+    getState: () => { user: UserState },
+  ) => {
+    const { dislikedMovies } = getState().user;
+
+    if (!dislikedMovies.find((m) => m === movie.imdbID)) {
+      dispatch({ type: ActionType.DISLIKE_MOVIE, payload: movie.imdbID });
+
+      const updatedMovies = [...dislikedMovies, movie.imdbID];
+      await AsyncStorage.setItem(USER_DISLIKED_MOVIES, JSON.stringify(updatedMovies));
+    }
+  }
+}
+
 const keepPlaying = () => {
   return { type: ActionType.REMOVE_MATCH_MOVIE };
 };
@@ -189,6 +215,7 @@ export const actionCreators = {
   loadUser,
   addUserToSync,
   likeMovie,
+  dislikeMovie,
   keepPlaying,
   setMovieToPartners,
 };

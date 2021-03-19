@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: 'white',
     borderColor: 'lightgray',
     borderWidth: 1,
     marginHorizontal: 10,

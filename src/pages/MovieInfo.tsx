@@ -17,9 +17,9 @@ const MovieInfo: React.FC<MovieInfoProps> = ({ movie }) => {
           resizeMode="contain"
         />
         <View style={styles.movieInfo}>
-          <Text style={styles.movieTitle}>{movie.title}</Text>
+          <Text style={styles.movieTitle}>{movie.Title}</Text>
           <Text style={styles.movieCountry}>
-            {movie.Country} - {movie.year}
+            {movie.Country} - {movie.Year}
           </Text>
           <Text style={styles.moviePlot}>{movie.Plot}</Text>
           <Text style={styles.movieActors}>{movie.Actors}</Text>

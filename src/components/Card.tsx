@@ -13,8 +13,8 @@ const Card: React.FC<CardProps> = ({ movie }) => {
       <Image source={{ uri: movie.Poster }} style={styles.cardImage} />
       <View style={styles.cardTextContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.movieTitle}>{movie.title}</Text>
-          <Text style={styles.movieTitle}>{movie.year}</Text>
+          <Text style={styles.movieTitle}>{movie.Title}</Text>
+          <Text style={styles.movieTitle}>{movie.Year}</Text>
         </View>
         <Text style={styles.movieDescription}>{movie.Plot}</Text>
       </View>
