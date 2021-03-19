@@ -13,6 +13,7 @@ A proof of concept app fpr syncing and matching movies you're willing to watch w
 - [ ] Consider likes from friends before the added you (now it will only match if a friend already has added you as a friend)
 - [ ] Allow to configure filters for movies (by year/genre/netflix/prime)
 - [ ] Improve usability and visual identity
+- [ ] Create server or firebase function to avoid having the whole movie list on the app
 
 ## How to run
 
